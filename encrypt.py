@@ -164,21 +164,6 @@ def roundkeyrev(state,key):
     for i in range(len(state)):
         state[i] ^= key[i]
 
-def multiply_bits(a,b):
-    p = 0
-    for _ in range(8):
-        if b & 1:
-            p ^= a
-        bit_set = a & 0x80
-        a <<= 1
-        a &= 0xFF
-        if bit_set:
-            a ^= 0x1b
-        b >>= 1
-    return p
-
-
-
 sboxInv = [0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38, 0xbf, 0x40, 0xa3, 0x9e, 0x81, 0xf3, 0xd7, 0xfb,
            0x7c, 0xe3, 0x39, 0x82, 0x9b, 0x2f, 0xff, 0x87, 0x34, 0x8e, 0x43, 0x44, 0xc4, 0xde, 0xe9, 0xcb,
            0x54, 0x7b, 0x94, 0x32, 0xa6, 0xc2, 0x23, 0x3d, 0xee, 0x4c, 0x95, 0x0b, 0x42, 0xfa, 0xc3, 0x4e,
@@ -272,8 +257,6 @@ def expkey(keys):
 
 
 # k = "pprtyuiopasdfght"
-print(int('80',16))
-print(int('0x8',16))
 k=input("enter key 16 characters(without spaces)")
 key=[ord(a) for a in k]
 newkey=expkey(key)
@@ -294,18 +277,22 @@ subbytes(msg)
 shiftrows(msg)
 roundkey(msg,newkey[-16:])
 m=[hex(m) for m in msg]
-print(msg)
+
+text=''
+for i in m:
+    text+=i.strip('0x')
+    text+=" "
+print(text)
 # print(m)
 # text=''
 # for c in m:
 #     text+=c.strip('0x')
 # print(text)
-im=input("enter array to decrypt")
+im=input("enter text to decrypt")
 l=[]
 i=0
-im=im.strip('[')
-im = im.strip(']')
-msg = list(map(int, (a for a in im.split(','))))
+im=im.strip()
+msg=[int(x,16) for x in im.split(' ')]
 
 roundkey(msg, newkey[-16:])
 for i in range(9):
